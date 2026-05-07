@@ -5,7 +5,7 @@
 ---
 
 ## 👤 Thông tin sinh viên
-- **Họ và tên:** Nguyen Van Phuong
+- **Họ và tên:** (Tự động hiển thị theo Full Name của tài khoản)
 - **Mã số sinh viên:** (Tạo ngẫu nhiên theo tài khoản)
 
 ---
