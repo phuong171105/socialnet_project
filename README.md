@@ -1,144 +1,92 @@
-# SocialNet
+# 🌐 SocialNet – Social Networking Project
 
-A lightweight social networking web application built with **Native PHP**, **MySQL**, **Nginx**, and **Linux**.
-
-## Project Structure
-
-```
-socialnet_project/
-├── admin/
-│   └── newuser.php          # Admin: create new user accounts
-├── socialnet/
-│   ├── signin.php           # Sign In page
-│   ├── index.php            # Home page (requires login)
-│   ├── profile.php          # Profile page (?owner=<username>)
-│   ├── setting.php          # Settings / edit profile
-│   ├── about.php            # About page (static info)
-│   └── signout.php          # Sign Out (destroys session)
-├── config/
-│   ├── db.php               # Database connection helper
-│   ├── session.php          # Session bootstrap & auth guards
-│   └── layout.php           # Shared HTML layout, CSS, NavBar
-├── db.sql                   # SQL to create DB and tables
-├── nginx.conf               # Nginx server block configuration
-└── README.md                # This file
-```
-
-## Prerequisites
-
-- Ubuntu 20.04 / 22.04 (or compatible Linux)
-- Nginx ≥ 1.18
-- PHP-FPM ≥ 8.1 with extensions: `mysqli`, `mbstring`
-- MySQL ≥ 8.0 **or** MariaDB ≥ 10.5
+**SocialNet** là một ứng dụng mạng xã hội thu nhỏ được xây dựng bằng Native PHP, MySQL, và Nginx trên nền tảng Linux. Dự án tập trung vào tính bảo mật, trải nghiệm người dùng hiện đại và hiệu năng cao.
 
 ---
 
-## 1. Database Setup
+## 👤 Thông tin sinh viên
+- **Họ và tên:** Nguyen Van Phuong
+- **Mã số sinh viên:** 20225678
+- **Lớp:** [Tên lớp của bạn]
 
+---
+
+## 🚀 Các tính năng chính
+
+### 1. Trang Quản trị (Admin) - `/admin/newuser.php`
+- Cho phép quản trị viên khởi tạo tài khoản người dùng mới.
+- Kiểm tra tính hợp lệ của dữ liệu đầu vào (username duy nhất, độ dài mật khẩu...).
+
+### 2. Hệ thống Xác thực (Auth) - `/socialnet/signin.php`
+- Đăng nhập bảo mật sử dụng session.
+- Mật khẩu được mã hóa chuẩn **bcrypt** (không lưu bản rõ).
+- Tự động chuyển hướng về trang chủ nếu đã đăng nhập.
+
+### 3. Bảng tin (News Feed) - `/socialnet/index.php`
+- Người dùng có thể chia sẻ trạng thái mới.
+- Xem danh sách bài đăng của mọi người trên hệ thống theo thời gian thực.
+- Sidebar hiển thị danh sách người dùng khác để nhanh chóng xem Profile.
+
+### 4. Trang cá nhân (Profile) - `/socialnet/profile.php`
+- Hiển thị thông tin chi tiết và tiểu sử của người dùng.
+- Hỗ trợ tham số `?owner=username` để xem profile của bất kỳ ai trên hệ thống.
+
+### 5. Cấu hình tài khoản (Setting) - `/socialnet/setting.php`
+- Chỉnh sửa họ tên, thông tin giới thiệu (Bio).
+- **Tính năng mở rộng:** Cho phép đổi mật khẩu (yêu cầu xác nhận mật khẩu hiện tại).
+
+### 6. Trang thông tin (About) - `/socialnet/about.php`
+- Hiển thị thông tin sinh viên và chi tiết về Tech Stack của dự án.
+
+---
+
+## 🛠️ Công nghệ sử dụng
+- **Backend:** PHP 8.x (Native)
+- **Database:** MySQL 8.0+
+- **Web Server:** Nginx 1.2x
+- **OS:** Ubuntu Linux
+- **Frontend:** HTML5, CSS3 (Modern Dark Mode UI, Responsive Design)
+
+---
+
+## ⚙️ Hướng dẫn cài đặt (Installation Guide)
+
+### 1. Cấu hình Database
+Sử dụng MySQL CLI để tạo Database và các bảng cần thiết:
 ```bash
-# Log in to MySQL as root
-sudo mysql -u root -p
-
-# Inside MySQL shell:
-source /path/to/socialnet_project/db.sql;
-exit;
+sudo mysql -u root -p < db.sql
 ```
 
-This creates:
-- Database: `socialnet`
-- Table: `account` (id, username, fullname, password, description, created_at)
-
-### Configure DB credentials
-
-Open `config/db.php` and set:
-
+### 2. Cấu hình kết nối PHP
+Mở file `config/db.php` và cập nhật thông tin tài khoản MySQL của bạn:
 ```php
 define('DB_HOST', '127.0.0.1');
-define('DB_USER', 'root');   // or a dedicated MySQL user
-define('DB_PASS', 'your_password_here');
+define('DB_USER', 'root'); 
+define('DB_PASS', 'Mật_khẩu_MySQL_của_bạn');
 ```
 
----
-
-## 2. Deploy Project Files
-
+### 3. Triển khai lên Web Server (Nginx)
+Copy toàn bộ project vào thư mục web của Nginx:
 ```bash
-# Copy project to Nginx document root
 sudo cp -r socialnet_project /var/www/
 sudo chown -R www-data:www-data /var/www/socialnet_project
-sudo chmod -R 755 /var/www/socialnet_project
 ```
 
----
-
-## 3. Configure Nginx
-
+### 4. Cấu hình Nginx Virtual Host
+Sử dụng file `nginx.conf` có sẵn trong dự án để cấu hình cho Nginx:
 ```bash
-# Copy the Nginx config
-sudo cp /var/www/socialnet_project/nginx.conf \
-        /etc/nginx/sites-available/socialnet
-
-# Enable it
-sudo ln -s /etc/nginx/sites-available/socialnet \
-           /etc/nginx/sites-enabled/socialnet
-
-# Remove default site if it conflicts
-sudo rm -f /etc/nginx/sites-enabled/default
-
-# Test and reload
-sudo nginx -t
-sudo systemctl reload nginx
-```
-
-> **PHP version**: The `nginx.conf` assumes `php8.1-fpm`. Adjust the socket
-> path (`unix:/run/php/php8.1-fpm.sock`) if you use a different version.
-
----
-
-## 4. PHP-FPM
-
-```bash
-# Install PHP and required extensions (if not already installed)
-sudo apt update
-sudo apt install -y php8.1-fpm php8.1-mysqli php8.1-mbstring
-
-# Start and enable PHP-FPM
-sudo systemctl enable --now php8.1-fpm
+sudo cp /var/www/socialnet_project/nginx.conf /etc/nginx/sites-available/socialnet
+sudo ln -s /etc/nginx/sites-available/socialnet /etc/nginx/sites-enabled/
+sudo nginx -t && sudo systemctl reload nginx
 ```
 
 ---
 
-## 5. Verify
-
-Open your browser and visit:
-
-| URL | Page |
-|-----|------|
-| `http://localhost/admin/newuser.php` | Create the first user |
-| `http://localhost/socialnet/signin.php` | Sign in |
-| `http://localhost/socialnet/index.php` | Home |
-| `http://localhost/socialnet/profile.php` | My profile |
-| `http://localhost/socialnet/setting.php` | Settings |
-| `http://localhost/socialnet/about.php` | About |
+## ✨ Những điểm nổi bật (Bonus Features)
+1. **Security:** Chống Session Fixation bằng cách regenerate ID khi login. Bảo vệ thư mục `/config/` không thể truy cập trực tiếp từ trình duyệt.
+2. **UI/UX:** Giao diện Dark Mode chuyên nghiệp, sử dụng font Inter từ Google Fonts, hiệu ứng Glassmorphism và gradient mượt mà.
+3. **Responsive:** Hoạt động hoàn hảo trên cả máy tính và thiết bị di động.
+4. **News Feed:** Tính năng mở rộng cho phép tương tác bằng cách đăng bài viết.
 
 ---
-
-## Extra / Extended Features
-
-The following features were added beyond the base requirements:
-
-1. **Password change in Settings** – Users can change their password after verifying the current one.
-2. **Secure password storage** – All passwords are hashed with `bcrypt` (`password_hash` / `password_verify`).
-3. **Session fixation protection** – `session_regenerate_id(true)` is called on every successful login.
-4. **Config directory protection** – Nginx denies direct HTTP access to `/config/`.
-5. **Responsive dark-mode UI** – Modern design with glassmorphism, gradient animations, and a sticky navigation bar.
-6. **User avatar initials** – Auto-generated coloured avatar from the first letter of the username.
-7. **Full Name editable in Settings** – Users can update their display name.
-
----
-
-## Notes
-
-- The `/config/` folder is protected by Nginx (`deny all`) and should never be web-accessible.
-- To reset a password manually: `UPDATE account SET password = '<bcrypt_hash>' WHERE username = 'target';`
-- Student Name: **Nguyen Van Phuong** | Student Number: **20225678**
+© 2026 - Nguyen Van Phuong
