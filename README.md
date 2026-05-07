@@ -6,8 +6,7 @@
 
 ## 👤 Thông tin sinh viên
 - **Họ và tên:** Nguyen Van Phuong
-- **Mã số sinh viên:** 20225678
-- **Lớp:** [Tên lớp của bạn]
+- **Mã số sinh viên:** (Tạo ngẫu nhiên theo tài khoản)
 
 ---
 
@@ -36,7 +35,8 @@
 - **Tính năng mở rộng:** Cho phép đổi mật khẩu (yêu cầu xác nhận mật khẩu hiện tại).
 
 ### 6. Trang thông tin (About) - `/socialnet/about.php`
-- Hiển thị thông tin sinh viên và chi tiết về Tech Stack của dự án.
+- Hiển thị thông tin động (dynamic) theo người dùng đăng nhập.
+- Hiển thị chi tiết về Tech Stack của dự án.
 
 ---
 
@@ -49,44 +49,67 @@
 
 ---
 
-## ⚙️ Hướng dẫn cài đặt (Installation Guide)
+## ⚙️ Hướng dẫn cài đặt & Chạy dự án (Dành cho Giảng Viên)
 
-### 1. Cấu hình Database
-Sử dụng MySQL CLI để tạo Database và các bảng cần thiết:
+Để chạy dự án này trên môi trường Local/Server mới, vui lòng thực hiện tuần tự các bước sau:
+
+### Bước 1: Khởi tạo Cơ sở dữ liệu (Database)
+Dự án đã đính kèm sẵn file `db.sql` bao gồm toàn bộ cấu trúc bảng (`account`, `post`). Giảng viên import file này vào MySQL:
+
 ```bash
 sudo mysql -u root -p < db.sql
 ```
+*(Lệnh trên sẽ tự động tạo database `socialnet` và các bảng liên quan).*
 
-### 2. Cấu hình kết nối PHP
-Mở file `config/db.php` và cập nhật thông tin tài khoản MySQL của bạn:
+### Bước 2: Cấu hình kết nối PHP tới MySQL
+Mở file `config/db.php` và cập nhật thông tin tài khoản MySQL của môi trường chấm thi (User/Pass).
+
 ```php
-define('DB_HOST', '127.0.0.1');
-define('DB_USER', 'root'); 
-define('DB_PASS', 'Mật_khẩu_MySQL_của_bạn');
+define('DB_HOST', '127.0.0.1'); // Hoặc 'localhost'
+define('DB_PORT', '3306');
+define('DB_NAME', 'socialnet');
+define('DB_USER', 'THAY_BANG_USER_CUA_THAY'); 
+define('DB_PASS', 'THAY_BANG_PASS_CUA_THAY');
 ```
 
-### 3. Triển khai lên Web Server (Nginx)
-Copy toàn bộ project vào thư mục web của Nginx:
+*Lưu ý:* Nếu thầy sử dụng User `root` trên Ubuntu, có thể MySQL đang cấu hình `auth_socket`. Trong trường hợp đó, vui lòng tạo một user MySQL riêng rẽ (có mật khẩu) và cấp quyền truy cập vào database `socialnet` để PHP có thể kết nối được.
+
+### Bước 3: Triển khai lên Web Server (Nginx)
+Copy toàn bộ mã nguồn vào thư mục root của web server và cấp quyền cho Nginx (`www-data`):
+
 ```bash
 sudo cp -r socialnet_project /var/www/
 sudo chown -R www-data:www-data /var/www/socialnet_project
+sudo chmod -R 755 /var/www/socialnet_project
 ```
 
-### 4. Cấu hình Nginx Virtual Host
-Sử dụng file `nginx.conf` có sẵn trong dự án để cấu hình cho Nginx:
+### Bước 4: Cấu hình Virtual Host cho Nginx
+Copy file cấu hình Nginx có sẵn trong dự án:
+
 ```bash
 sudo cp /var/www/socialnet_project/nginx.conf /etc/nginx/sites-available/socialnet
 sudo ln -s /etc/nginx/sites-available/socialnet /etc/nginx/sites-enabled/
-sudo nginx -t && sudo systemctl reload nginx
+# Xóa cấu hình default nếu bị xung đột port 80
+sudo rm -f /etc/nginx/sites-enabled/default
+
+# Kiểm tra và khởi động lại Nginx
+sudo nginx -t
+sudo systemctl restart nginx
 ```
+
+### Bước 5: Chạy thử ứng dụng
+1. Mở trình duyệt, truy cập `http://localhost/admin/newuser.php` để tạo một tài khoản đầu tiên.
+2. Truy cập `http://localhost/socialnet/signin.php` để đăng nhập.
+3. Trải nghiệm hệ thống mạng xã hội thu nhỏ!
 
 ---
 
 ## ✨ Những điểm nổi bật (Bonus Features)
-1. **Security:** Chống Session Fixation bằng cách regenerate ID khi login. Bảo vệ thư mục `/config/` không thể truy cập trực tiếp từ trình duyệt.
+1. **Security:** Chống Session Fixation bằng cách regenerate ID khi login. Bảo vệ thư mục `/config/` không thể truy cập trực tiếp từ trình duyệt. Mật khẩu được băm (hash) bằng thuật toán `bcrypt` rất an toàn.
 2. **UI/UX:** Giao diện Dark Mode chuyên nghiệp, sử dụng font Inter từ Google Fonts, hiệu ứng Glassmorphism và gradient mượt mà.
 3. **Responsive:** Hoạt động hoàn hảo trên cả máy tính và thiết bị di động.
-4. **News Feed:** Tính năng mở rộng cho phép tương tác bằng cách đăng bài viết.
+4. **Tính năng động:** Giao diện, avatar, tên người dùng ở mọi trang đều được render động bằng PHP từ Database và Session.
+5. **News Feed:** Tính năng mở rộng cho phép người dùng đăng bài viết và xem hoạt động của mọi người theo thời gian thực.
 
 ---
 © 2026 - Nguyen Van Phuong
