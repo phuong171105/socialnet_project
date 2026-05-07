@@ -1,6 +1,6 @@
 # 🌐 SocialNet – Social Networking Project
 
-**SocialNet** là một ứng dụng mạng xã hội thu nhỏ được xây dựng bằng Native PHP, MySQL, và Nginx trên nền tảng Linux. Dự án tập trung vào tính bảo mật, trải nghiệm người dùng hiện đại và hiệu năng cao.
+**SocialNet** là một ứng dụng mạng được xây dựng bằng Native PHP, MySQL, và Nginx trên nền tảng Linux. 
 
 ---
 
@@ -49,12 +49,12 @@
 
 ---
 
-## ⚙️ Hướng dẫn cài đặt & Chạy dự án (Dành cho Giảng Viên)
+## ⚙️ Hướng dẫn cài đặt & Chạy dự án
 
 Để chạy dự án này trên môi trường Local/Server mới, vui lòng thực hiện tuần tự các bước sau:
 
 ### Bước 1: Khởi tạo Cơ sở dữ liệu (Database)
-Dự án đã đính kèm sẵn file `db.sql` bao gồm toàn bộ cấu trúc bảng (`account`, `post`). Giảng viên import file này vào MySQL:
+Dự án đã đính kèm sẵn file `db.sql` bao gồm toàn bộ cấu trúc bảng (`account`, `post`). Chỉ cần import file này vào MySQL:
 
 ```bash
 sudo mysql -u root -p < db.sql
@@ -72,7 +72,7 @@ define('DB_USER', 'THAY_BANG_USER_CUA_THAY');
 define('DB_PASS', 'THAY_BANG_PASS_CUA_THAY');
 ```
 
-*Lưu ý:* Nếu thầy sử dụng User `root` trên Ubuntu, có thể MySQL đang cấu hình `auth_socket`. Trong trường hợp đó, vui lòng tạo một user MySQL riêng rẽ (có mật khẩu) và cấp quyền truy cập vào database `socialnet` để PHP có thể kết nối được.
+*Lưu ý:* Nếu sử dụng User `root` trên Ubuntu, có thể MySQL đang cấu hình `auth_socket`. Trong trường hợp đó, vui lòng tạo một user MySQL riêng rẽ (có mật khẩu) và cấp quyền truy cập vào database `socialnet` để PHP có thể kết nối được.
 
 ### Bước 3: Triển khai lên Web Server (Nginx)
 Copy toàn bộ mã nguồn vào thư mục root của web server và cấp quyền cho Nginx (`www-data`):
@@ -103,13 +103,4 @@ sudo systemctl restart nginx
 3. Trải nghiệm hệ thống mạng xã hội thu nhỏ!
 
 ---
-
-## ✨ Những điểm nổi bật (Bonus Features)
-1. **Security:** Chống Session Fixation bằng cách regenerate ID khi login. Bảo vệ thư mục `/config/` không thể truy cập trực tiếp từ trình duyệt. Mật khẩu được băm (hash) bằng thuật toán `bcrypt` rất an toàn.
-2. **UI/UX:** Giao diện Dark Mode chuyên nghiệp, sử dụng font Inter từ Google Fonts, hiệu ứng Glassmorphism và gradient mượt mà.
-3. **Responsive:** Hoạt động hoàn hảo trên cả máy tính và thiết bị di động.
-4. **Tính năng động:** Giao diện, avatar, tên người dùng ở mọi trang đều được render động bằng PHP từ Database và Session.
-5. **News Feed:** Tính năng mở rộng cho phép người dùng đăng bài viết và xem hoạt động của mọi người theo thời gian thực.
-
----
-© 2026 - Nguyen Van Phuong
+© 2026 - Do Thi Thu Phuong
