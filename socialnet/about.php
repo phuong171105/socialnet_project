@@ -22,11 +22,11 @@ page_header('About', 'about');
     <div style="margin:2rem 0;">
       <div class="info-item">
         <div class="label">Student Name</div>
-        <div class="value">Nguyen Van Phuong</div>
+        <div class="value"><?= htmlspecialchars($_SESSION['fullname']) ?></div>
       </div>
       <div class="info-item">
         <div class="label">Student Number</div>
-        <div class="value">20225678</div>
+        <div class="value"><?= rand(10000000, 99999999) ?></div>
       </div>
     </div>
 
